@@ -26,6 +26,7 @@ set -e
 GITHUB_REPO="https://github.com/mohammaddaoudfarooqi/mongodb-gemini-extension.git"
 EXTENSIONS_DIR="$HOME/.gemini/extensions"
 TARGET_DIR="$HOME/.gemini/extensions/mongodb"
+BACKUPS_DIR="$HOME/.gemini/backups"
 MIN_NODE_MAJOR=20
 MIN_NODE_MINOR=19
 MIN_NODE_PATCH=0
@@ -104,7 +105,7 @@ Examples:
 What this script does:
   1. Checks prerequisites (Node.js >= 20.19.0, npm, git)
   2. Creates ~/.gemini/extensions/ if it does not exist
-  3. Backs up any existing mongodb extension (timestamped)
+  3. Backs up any existing mongodb extension to ~/.gemini/backups/ (timestamped)
   4. Installs extension files (from local repo or git clone)
   5. Runs npm install (or npm ci if lock file present)
   6. Configures mongo.config.json (if not already present)
@@ -205,8 +206,9 @@ fi
 
 if [ -d "$TARGET_DIR" ]; then
   BACKUP_SUFFIX="$(date +%Y%m%d-%H%M%S)"
-  BACKUP_DIR="${TARGET_DIR}.backup.${BACKUP_SUFFIX}"
-  info "Backing up existing extension to $(basename "$BACKUP_DIR")..."
+  mkdir -p "$BACKUPS_DIR" || die "Cannot create $BACKUPS_DIR — check permissions."
+  BACKUP_DIR="${BACKUPS_DIR}/mongodb.backup.${BACKUP_SUFFIX}"
+  info "Backing up existing extension to $BACKUP_DIR..."
   mv "$TARGET_DIR" "$BACKUP_DIR" || die "Failed to backup existing extension."
   success "Backup created: $BACKUP_DIR"
 fi
