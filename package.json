@@ -9,7 +9,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "mongodb-mcp-server": "^1.8.0"
+    "mongodb-mcp-server": "^1.10.0"
   },
   "devDependencies": {
     "vitest": "^3.1.1"
